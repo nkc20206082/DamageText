@@ -3,25 +3,36 @@ using UnityEngine;
 public class AttackController : MonoBehaviour
 {
     [SerializeField] private GameObject _damageTextObj; //ダーメージテキストを格納
-    Transform pool;
+    private Transform _textObjPool;
+    private GameObject _getTextObj;
+
     //Enemyがダメージを受けるところでよびだす
 
-    private void Start()
+    private void Awake()
     {
-        pool = GameObject.Find("DamageText").transform;        //ダメージテキスト(3DText)を召喚
+        _textObjPool = GameObject.Find("DamageText").transform;        //ダメージテキスト(3DText)を召喚
     }
     public void Attack()
     {
-        foreach(Transform t in pool)
+        GameObject nonActiveTextObj = null;
+
+        for (int i = 0; i < _textObjPool.childCount; i++)
         {
-            Debug.Log(t.gameObject);
-            //オブジェが非アクティブなら使い回し
-            if (!t.gameObject.activeSelf)
+            if (!_textObjPool.GetChild(i).gameObject.activeSelf)
             {
-                t.SetPositionAndRotation(transform.position,Quaternion.identity);
-                t.gameObject.SetActive(true);//位置と回転を設定後、アクティブにする
+                Debug.Log(_textObjPool.GetChild(i).gameObject);
+                nonActiveTextObj = _textObjPool.GetChild(i).gameObject;
+                break;
             }
         }
-        Instantiate(_damageTextObj, transform.position, transform.rotation, pool);
+        if (nonActiveTextObj == null)
+        {
+            _getTextObj = Instantiate(_damageTextObj, transform.position, transform.rotation, _textObjPool);
+        }
+        else
+        {
+            nonActiveTextObj.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
+            nonActiveTextObj.gameObject.SetActive(true);//位置と回転を設定後、アクティブにする
+        }
     }
 }
