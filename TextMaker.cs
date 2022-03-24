@@ -5,7 +5,7 @@ public class TextMaker : MonoBehaviour
     [SerializeField] private GameObject _damageTextObj; //ダーメージテキストを格納
     private GameObject _getTextObj;
 
-    public void Attack(Vector3 TargetPos,Quaternion TargetRot,int Num)
+    public void Attack(Vector3 targetPos,int num)
     {
         GameObject nonActiveTextObj = null;
 
@@ -20,14 +20,14 @@ public class TextMaker : MonoBehaviour
         }
         if (nonActiveTextObj == null)
         {
-            _getTextObj = Instantiate(_damageTextObj, TargetPos, TargetRot, this.transform);
-            _getTextObj.GetComponent<TextMesh>().text = Num.ToString();
+            _getTextObj = Instantiate(_damageTextObj, targetPos, Quaternion.identity, this.transform);
+            _getTextObj.GetComponent<TextMesh>().text = num.ToString();
         }
         else
         {
-            nonActiveTextObj.transform.SetPositionAndRotation(TargetPos, Quaternion.identity);
+            nonActiveTextObj.transform.SetPositionAndRotation(targetPos, Quaternion.identity);
             nonActiveTextObj.gameObject.SetActive(true);//位置と回転を設定後、アクティブにする
-            nonActiveTextObj.GetComponent<TextMesh>().text = Num.ToString();
+            nonActiveTextObj.GetComponent<TextMesh>().text = num.ToString();
         }
     }
 }
